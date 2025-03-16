@@ -1,5 +1,5 @@
 from uncertainties import ufloat
-from uncertainties.umath import sqrt
+from uncertainties.umath import sqrt, sin, log, tan
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -30,3 +30,14 @@ def print_ufloat(arr_ufloat, n_round = 10):
     print("погрешности")
     for i in range(len(arr_ufloat)):
         print(round(arr_ufloat[i].s, n_round))
+
+
+def do_unary_operation(arr_ufloat, unary_operation_name):
+    
+    res = np.array([ufloat(0, 0) for _ in range (len(arr_ufloat))])
+    
+    for i in range(len(arr_ufloat)):
+        print(arr_ufloat[i])
+        exec(f"res[{i}] = ({unary_operation_name}(arr_ufloat[{i}]))")
+
+    return res

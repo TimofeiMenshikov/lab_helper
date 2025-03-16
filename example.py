@@ -4,14 +4,14 @@ import pandas as pd
 from uncertainties import ufloat
 from uncertainties.umath import sqrt, tan, sin
 from mnk_functions import mnk, mnk_linear
-from ufloat_functions import get_values_and_errs_from_ufloat_arr
+from ufloat_functions import get_values_and_errs_from_ufloat_arr, do_unary_operation, print_ufloat
 from tex_functions import make_table_and_print
 from math import pi
 
 import numpy as np
 import matplotlib.pyplot as plt
 
-from excel_func import get_ufloat_arr_from_excel, print_ufloat
+from excel_func import get_ufloat_arr_from_excel
 
 # Загрузка файла Excel
 excel_filename = "lab4.4.2.xlsx"
@@ -21,6 +21,10 @@ gr = get_ufloat_arr_from_excel(excel_filename, sheet_name, "Градусы", "Ep
 min = get_ufloat_arr_from_excel(excel_filename, sheet_name, "Минуты", "Eps_0") 
 sec = get_ufloat_arr_from_excel(excel_filename, sheet_name, "Секунды", "eps") 
 Lambda = get_ufloat_arr_from_excel(excel_filename, sheet_name, "Длина волны", "Eps_0")[:6] 
+
+
+gr_sin = do_unary_operation(gr, "sin") #test unary operation (not nessessary string)
+
 
 print(gr)
 print(min)
