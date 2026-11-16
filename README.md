@@ -1,74 +1,30 @@
-# Lab helper
-##### this is project that is maden for helping student with their physics labs
+# Lab Helper
 
-### 0. What is ufloat
-##### Ufloat is a class object that represents a pair of floats: **value** and **error**.
-##### In this repo **numpy arrays** where elements are objects of **ufloat** class are used so it is very simple to obtain new values with errors
-##### For example you have  numpy arrs for Resistance (*R*), Electric current (*I*) to get Voltage (*U*) you should write:
-####
-```python
-U = I * R
-```
-##### And you will get an **ufloat numpy arr** for Voltage
+Python helpers for turning Excel lab measurements into plots, linear fits, and LaTeX tables. Values and their uncertainties can be carried together through the calculations.
 
+## Run the example
 
-### 1. Data read
-##### There is an example of **excel file** "lab4.4.2.xlsx" to store your experemental results. For further data processing in python write like in **example**:
-####
-```python
-ufloat_value = get_ufloat_arr_from_excel(excel_filename, sheet_name, "value", "error") 
+Run these commands from the repository root.
+
+```bash
+python -m pip install numpy pandas openpyxl uncertainties matplotlib
+python example.py
 ```
 
-##### Remember that for further correct operation it is necessary that all arrays have the **same** length
-##### If value don't have any error create a collumn with zeros like in **example**
+The example reads the [included Excel workbook](lab4.4.2.xlsx), prints measurement rows in LaTeX, and fits a line to the sine of the measured angle versus wavelength. It plots the selected points with error bars. The preview focuses on the measured wavelengths.
 
-### 2. Make table
-To make the table body in **LaTeX** format use:
-```python
-make_table_and_print(0, len(ufloat_value_1), ufloat_value_1, ufloat_value_2, ufloat_value_3)
-```
+![Plot produced by example.py showing the measured points, uncertainty bars, and linear fit](assets/lab-helper-example.png)
 
-numpy arrs *ufloat_value_i* must be the **same size** and **type**: numpy arr of *ufloat values* 
-there are any numbers of **numpy arrs**
+## Use the helpers in your own lab
 
-Example of using this function:
+| Task | Function |
+| --- | --- |
+| Read a measurement column and an uncertainty column from Excel | `get_ufloat_arr_from_excel(file, sheet, value_column, error_column)` |
+| Get numbers and error bars for Matplotlib | `get_values_and_errs_from_ufloat_arr(values)` |
+| Fit a line with an intercept | `mnk(x, y)` |
+| Fit a line through the origin | `mnk_linear(x, y)` |
+| Print measurement rows for a LaTeX table | `make_table_and_print(0, len(values), values)` |
 
-```LaTex
-$ 255.0 $ & $ 45.0 $ & $38 \pm 5$  \\ \hline
-$ 255.0 $ & $ 10.0 $ & $59 \pm 5$  \\ \hline
-$ 252.0 $ & $ 37.0 $ & $7 \pm 5$  \\ \hline
-$ 247.0 $ & $ 12.0 $ & $32 \pm 5$  \\ \hline
-$ 246.0 $ & $ 41.0 $ & $13 \pm 5$  \\ \hline
-$ 239.0 $ & $ 34.0 $ & $51 \pm 5$  \\ \hline
-$ 295.0 $ & $ 43.0 $ & $21 \pm 5$  \\ \hline
-$ 297.0 $ & $ 43.0 $ & $45 \pm 5$  \\ \hline
-$ 299.0 $ & $ 41.0 $ & $41 \pm 5$  \\ \hline
-$ 300.0 $ & $ 49.0 $ & $36 \pm 5$  \\ \hline
-$ 278.0 $ & $ 38.0 $ & $56 \pm 5$  \\ \hline
-```
+The Excel reader returns an array of `ufloat` values from the `uncertainties` package. Arithmetic propagates the measurement uncertainties. Use matching array lengths for fits and tables, and use a column of zeros when a measurement column has no recorded uncertainty.
 
-### 3. Draw graphic
-
-To make the graphic you should divide **values** and **errs** with using function:
-
-```python
-values, errs = get_values_and_errs_from_ufloat_arr(ufloat_arr)
-```
-
-Then use **matplotlib** like in example to draw the graphic
-
-### 4. Get mnk approximation
-
-##### 2 methods of mnk approximation is supported.
-##### If you know that the line must pass through zero you should use `mnk_linear` function to get **angle coefficient**
-##### Else you should use `mnk` function to get **angle_coefficient** and **free_coefficient**
-
-### 5. Unary operations
-
-###### In order to calculate new values that require unary operators in their calculations, it is necessary to calculate intermediate quantities with one unary operator as follows:
-
-```python
-ufloat_value_sin = do_unary_operation(ufloat_value, "sin")
-```
-
-##### Instead of `sin`, you can substitute any unary function over **ufloat** defined in the **uncertainties.umath** library
+See [example.py](example.py) for a complete example showing the imports, the workbook columns, and the calculation.
